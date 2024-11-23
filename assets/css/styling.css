@@ -1,0 +1,133 @@
+*::before,
+*::after,
+* {
+    margin: 0;
+    padding: 0;
+    -webkit-box-sizing: inherit;
+    box-sizing: inherit;
+}
+html {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    font-size: 62.5%;
+}
+body {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-pack: space-evenly;
+    -ms-flex-pack: space-evenly;
+    justify-content: space-evenly;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    min-height: 90vh;
+    font-family: "Poppins", sans-serif;
+    2background-color: #1e2140;
+    color: white;
+}
+body .main-heading {
+    font-size: 3.2rem;
+    font-weight: 500;
+}
+body main {
+    width: 40rem;
+    height: 40rem;
+    border-radius: 50%;
+    text-align: center;
+}
+body .modes {
+    font-size: 1.8rem;
+    padding: 1.6rem 1rem;
+    2background: #151932;
+    border-radius: 10rem;
+}
+body .modes a {
+    margin-right: 2em;
+    text-decoration: none;
+    font-weight: 500;
+    color: #484c67;
+    -webkit-transition: all 300ms ease-out;
+    transition: all 300ms ease-out;
+}
+
+body .modes a.active {
+
+    padding: 0.5em 1em;
+
+    border-radius: 50px;
+
+    background-color: hotpink;
+
+    color: #1c2244;
+
+}
+
+body .modes a:last-child {
+    margin-right: 0;
+}
+body .get-started {
+    background: royalblue;
+    padding: 1.2rem 2rem;
+    border-radius: 0.4rem;
+    font-size: 1.8rem;
+    margin-top: 2rem;
+}
+body .pomodoro {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    margin: 2.5rem 0;
+    text-align: center;
+    border-radius: 50%;
+    23background: #151932;
+    -webkit-box-shadow: 50px 50px 82px #0e1021, -50px -50px 82px #1c2244;
+    box-shadow: 50px 50px 82px #0e1021, -50px -50px 82px #1c2244;
+}
+body .pomodoro::before {
+    content: "";
+    position: absolute;
+    border: 10px solid hotpink;
+    border-radius: 50%;
+    width: 35rem;
+    height: 35rem;
+}
+body .pomodoro__time {
+    font-size: 7rem;
+    font-weight: 500;
+}
+body .pomodoro__state {
+    font-size: 2rem;
+    margin-top: 1em;
+    padding-left: 1em;
+    letter-spacing: 1em;
+    text-transform: uppercase;
+}
+
+@media screen and (min-width: 320px) and (max-width: 480px) {
+    main {
+        -webkit-transform: scale(0.8);
+        transform: scale(0.8);
+    }
+    body .modes {
+        font-size: 1.5rem;
+    }
+}
+/*# sourceMappingURL=style.css.map */
