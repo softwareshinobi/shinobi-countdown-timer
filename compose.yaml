@@ -1,11 +1,10 @@
-
 services:
 
-    clocks.softwareshinobi.digital:
+    shinobi-countdown-timers:
 
-        container_name: clocks.softwareshinobi.digital
+        container_name: shinobi-countdown-timers
         
-        image: softwareshinobi/clocks.softwareshinobi.digital
+        image: softwareshinobi/shinobi-countdown-timers
 
         build: 
 
