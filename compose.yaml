@@ -1,19 +1,19 @@
 services:
 
-    shinobi-countdown-timers:
+    clocks.softwareshinobi.com:
 
-        container_name: shinobi-countdown-timers
-        
-        image: softwareshinobi/shinobi-countdown-timers
+        container_name: clocks.softwareshinobi.com
 
-        build: 
+        image: softwareshinobi/clocks.softwareshinobi.com
+
+        build:
 
             context: .
 
             dockerfile: Dockerfile
-    
+
         restart: unless-stopped
 
         ports:
 
-            - "8080:80"
+            - "8000:80"
