@@ -16,21 +16,6 @@ A simple, full-screen, and responsive countdown timer that starts counting up af
 - **Audio Alarm:** Plays a sound notification when the countdown completes.
 - **Zero Dependencies:** Built with pure, vanilla JavaScript—no frameworks required.
 
-## How to Use
-
-1.  **Clone the repository:**
-    ```bash
-    git clone [https://github.com/your-username/your-repo-name.git](https://github.com/your-username/your-repo-name.git)
-    ```
-2.  **Navigate to the directory:**
-    ```bash
-    cd your-repo-name
-    ```
-3.  **Open in your browser:**
-    Open the `index.html` file in any modern web browser.
-
-That's it! Click one of the preset times or the "Start" button to begin.
-
 ## Technologies Used
 
 - **HTML5**
@@ -38,3 +23,9 @@ That's it! Click one of the preset times or the "Start" button to begin.
 - **Bootstrap 5**
 - **Bootswatch 'Darkly' Theme**
 - **Vanilla JavaScript**
+
+## Use It
+
+Go play with it here.
+
+<a href="https://clocks.softwareshinobi.com">Countdown Timer</a>
