@@ -1,70 +1,187 @@
-<!doctype html>
-
+<!DOCTYPE html>
 <html lang="en">
-
 <head>
-
-<!-- Required meta tags -->
-
-<meta charset="utf-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-<link rel="stylesheet" href="assets/css/styling.css" />
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.1.3/dist/vapor/bootstrap.min.css">
-
-<title>
-
-Clocks / Software Shinobi
-
-</title>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown / Software Shinobi</title>
+    
+    <!-- Bootswatch 'Darkly' Theme -->
+    <link rel="stylesheet" href="https://bootswatch.com/5/darkly/bootstrap.min.css">
+    
+    <!-- Custom Styles for Fullscreen Layout -->
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden; /* Prevents scrollbars */
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .timer-display {
+            /* Responsive font size based on viewport width */
+            font-size: 30vw; 
+            font-weight: bold;
+            line-height: 1;
+        }
+        /* Media query for larger screens to cap font size */
+        @media (min-width: 768px) {
+            .timer-display {
+                font-size: 200px; /* A fixed large size for desktop */
+            }
+        }
+        .controls-container .btn {
+            margin: 5px;
+        }
+    </style>
 </head>
-
 <body>
 
-<br><br>
+    <!-- Countdown Timer Display -->
+    <div class="timer-display" id="timer-display">
+        20:00
+    </div>
+    
+    <!-- Timer Preset Buttons -->
+    <div class="presets-container my-3">
+        <div class="btn-group" role="group" aria-label="Timer presets">
+            <button type="button" class="btn btn-outline-info" data-time="6000">100 min</button>
+            <button type="button" class="btn btn-outline-info" data-time="1200">20 min</button>
+            <button type="button" class="btn btn-outline-info" data-time="600">10 min</button>
+        </div>
+    </div>
 
-<h1 class="main-heading"> countdown timers
+    <!-- Main Start/Pause/Reset Controls -->
+    <div style="display:none" class="controls-container">
+        <div class="btn-group btn-group-lg" role="group" aria-label="Timer controls">
+             <button type="button" class="btn btn-success" id="start-btn">Start</button>
+             <button type="button" class="btn btn-warning" id="pause-btn">Pause</button>
+             <button type="button" class="btn btn-danger" id="reset-btn">Reset</button>
+        </div>
+    </div>
 
-</h1>
+    <!-- Audio element for the alarm sound -->
+    <audio id="alarm-sound" src="https://www.soundjay.com/buttons/sounds/button-16.mp3" preload="auto"></audio>
 
-<div class="modes">
+    <!-- Bootstrap JS for any components that might need it -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-<a class="mode" href="#" data-time="6000">100x mins</a>
+    <!-- Countdown Timer JavaScript Logic -->
+    <script>
+        const timerDisplay = document.getElementById('timer-display');
+        const startBtn = document.getElementById('start-btn');
+        const pauseBtn = document.getElementById('pause-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const presetButtons = document.querySelectorAll('.presets-container .btn');
+        const alarmSound = document.getElementById('alarm-sound');
 
-<a class="mode" href="#" data-time="1200">20x mins</a>
+        let countdown; // To hold the setInterval instance
+        let timeLeft; // Time left in seconds. Can be negative for count-up.
+        let initialTime = 1200; // Default to 20 minutes (1200 seconds)
+        let isPaused = true; // Timer is paused by default
+        let alarmHasPlayed = false; // Flag to ensure alarm plays only once
 
-<a class="mode" href="#" data-time="600">10x mins</a>
+        /**
+         * Requests to enter fullscreen mode.
+         */
+        function enterFullScreen() {
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen().catch(err => console.error(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`));
+            } else if (elem.mozRequestFullScreen) { // Firefox
+                elem.mozRequestFullScreen();
+            } else if (elem.webkitRequestFullscreen) { // Chrome, Safari & Opera
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) { // IE/Edge
+                elem.msRequestFullscreen();
+            }
+        }
 
+        /**
+         * Updates the timer display with the formatted time for both countdown and count-up.
+         * @param {number} seconds - The total seconds to display.
+         */
+        function displayTime(seconds) {
+            const isCountingUp = seconds < 0;
+            const remainingSeconds = Math.abs(seconds);
 
+            const minutes = Math.floor(remainingSeconds / 60);
+            const remainderSeconds = remainingSeconds % 60;
+            
+            const display = `${isCountingUp ? '+ ' : ''}${minutes < 10 ? '0' : ''}${minutes}:${remainderSeconds < 10 ? '0' : ''}${remainderSeconds}`;
+            
+            timerDisplay.textContent = display;
+            document.title = display; // Update page title
+        }
 
+        /**
+         * Core timer function that handles both countdown and count-up.
+         */
+        function runTimer() {
+            // If the timer is not paused, don't start a new one.
+            if (!isPaused) return; 
+            
+            enterFullScreen(); // Request fullscreen when the timer starts.
+            isPaused = false;
+            
+            const endTime = Date.now() + timeLeft * 1000;
 
+            countdown = setInterval(() => {
+                timeLeft = Math.round((endTime - Date.now()) / 1000);
+                
+                // When countdown finishes, play alarm once and transition to count-up.
+                if (timeLeft < 0 && !alarmHasPlayed) {
+                    alarmSound.play();
+                    alarmHasPlayed = true;
+                }
 
+                displayTime(timeLeft);
+            }, 1000);
+        }
 
-</div>
+        /**
+         * Pauses the timer.
+         */
+        function pauseTimer() {
+            clearInterval(countdown);
+            isPaused = true;
+        }
 
-<div class="get-started" style="display:none;">
+        /**
+         * Resets the timer to the last selected initial time.
+         */
+        function resetTimer() {
+            clearInterval(countdown);
+            isPaused = true;
+            alarmHasPlayed = false;
+            timeLeft = initialTime;
+            displayTime(initialTime);
+        }
+        
+        // --- Event Listeners ---
+        startBtn.addEventListener('click', runTimer);
+        pauseBtn.addEventListener('click', pauseTimer);
+        resetBtn.addEventListener('click', resetTimer);
 
-</div>
+        presetButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                // Set the new initial time
+                initialTime = parseInt(e.target.dataset.time, 10);
+                // Reset the timer state
+                resetTimer();
+                // Immediately start the timer
+                runTimer();
+            });
+        });
 
-<main>
-
-<div class="pomodoro">
-
-<h1 class="pomodoro__time"></h1>
-
-</div>
-
-</main>
-
-<audio src="assets/sounds/alarm.mp3"></audio>
-
-<script src="assets/countdown.js"></script>
+        // Initialize display on load
+        timeLeft = initialTime;
+        displayTime(initialTime);
+    </script>
 
 </body>
-
 </html>
