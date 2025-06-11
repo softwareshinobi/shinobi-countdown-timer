@@ -1,12 +1,17 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Countdown / Software Shinobi</title>
+
+    <title>Countdown Timer / Software Shinobi</title>    
     
     <!-- Bootswatch 'Darkly' Theme -->
-    <link rel="stylesheet" href="https://bootswatch.com/5/darkly/bootstrap.min.css">
+    <link rel="stylesheet" href="https://bootswatch.com/5/quartz/bootstrap.min.css">
     
     <!-- Custom Styles for Fullscreen Layout -->
     <style>
@@ -65,7 +70,7 @@
     </div>
 
     <!-- Audio element for the alarm sound -->
-    <audio id="alarm-sound" src="https://www.soundjay.com/buttons/sounds/button-16.mp3" preload="auto"></audio>
+    <audio id="alarm-sound" src="sounds/microwave.mp3" preload="auto"></audio>
 
     <!-- Bootstrap JS for any components that might need it -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -125,7 +130,8 @@
             // If the timer is not paused, don't start a new one.
             if (!isPaused) return; 
             
-            enterFullScreen(); // Request fullscreen when the timer starts.
+            //            enterFullScreen(); // Request fullscreen when the timer starts.
+
             isPaused = false;
             
             const endTime = Date.now() + timeLeft * 1000;
