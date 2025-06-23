@@ -3,85 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Countdown Timer / Software Shinobi</title>
+    <title> Home / Shinobi Clocks</title>
     <!-- Bootswatch 'Quartz' Theme -->
     <link rel="stylesheet" href="https://bootswatch.com/5/quartz/bootstrap.min.css">
-    <!-- Font Awesome for Icons -->
+    <!-- Font Awesome for Icons (still included as it's a common dependency, but the specific cog icon is removed) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Custom Styles for Fullscreen Layout and Intention Display -->
+    <!-- Custom Styles -->
     <style>
         html, body {
             height: 100%;
             margin: 0;
-            /* overflow: hidden; /* Prevents scrollbars - re-enable if needed for fullscreen layout */
         }
         body {
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            justify-content: center; /* Center content vertically */
+            align-items: center; /* Center content horizontally */
             text-align: center;
             padding-top: 56px; /* Adjust for fixed-top navbar height */
+            background-color: #2c3e50; /* Dark background to match theme */
+            color: #ecf0f1; /* Light text color */
+            min-height: calc(100vh - 56px); /* Ensure body takes full height after navbar */
         }
-        .intention-display {
-            font-size: 8vw; /* Responsive font size */
-            font-weight: bold;
-            color: #ffc107; /* Warning color from Bootswatch */
-            margin-bottom: 20px;
-            max-width: 90%; /* Limit width to prevent overflow */
-            word-wrap: break-word; /* Break long words */
-            line-height: 1.2;
+        /* Intention-display related styles removed */
+
+        .cards-container {
+            display: flex;
+            flex-wrap: wrap; /* Allow cards to wrap on smaller screens */
+            justify-content: center;
+            gap: 30px; /* Space between cards */
+            padding: 20px;
+            max-width: 1200px; /* Max width for the card container */
+            width: 100%;
+            flex-grow: 1; /* Allow cards container to grow and push content to center */
+            align-items: center; /* Align cards vertically within their container */
         }
-        @media (min-width: 768px) {
-            .intention-display {
-                font-size: 60px; /* Fixed size for desktop */
-            }
+        .card {
+            /* Updated classes from border-secondary mb-3 */
+            border-radius: 10px; /* Rounded corners */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Subtle shadow */
+            width: 100%; /* Full width on small screens */
+            max-width: 350px; /* Max width for individual cards (approx 20rem) */
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            cursor: pointer; /* Indicate cards are clickable */
         }
-        .timer-display {
-            /* Responsive font size based on viewport width */
-            font-size: 30vw;
-            font-weight: bold;
-            line-height: 1;
+        .card:hover {
+            transform: translateY(-5px); /* Lift effect on hover */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5); /* More prominent shadow on hover */
         }
-        /* Media query for larger screens to cap font size */
-        @media (min-width: 768px) {
-            .timer-display {
-                font-size: 200px; /* A fixed large size for desktop */
-            }
+        .card-body {
+            padding: 25px;
         }
-        .controls-container .btn {
-            margin: 10px; /* Increased margin for larger buttons */
-            padding: 15px 30px; /* Bigger padding */
-            font-size: 1.5rem; /* Larger font size for buttons */
+        .card-title {
+
+            margin-bottom: 15px;
+            font-size: 1.8rem;
         }
-        .presets-container .btn {
-            margin: 5px;
-            padding: 10px 20px; /* Bigger padding for preset buttons */
-            font-size: 1.2rem; /* Larger font size for preset buttons */
+        .card-text {
+            color: #ecf0f1;
+            font-size: 1rem;
+            margin-bottom: 25px;
+        }
+        .btn-card {
+           /* background-color: #3498db;  Info color from theme
+            border-color: #3498db;*/
+            color: white;
+            padding: 10px 25px;
+            font-size: 1.1rem;
+            border-radius: 5px;
+            transition: background-color 0.2s ease-in-out;
+        }
+        .btn-c2ard:hover {
+            background-color: #2980b9; /* Darker blue on hover */
+            border-color: #2980b9;
         }
     </style>
 </head>
 <body>
-    <!-- Top Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+
+    <nav class="navbar navbar-expand-lg bg-primary fixed-top" data-bs-theme="dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Clocks</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <a class="navbar-brand" href="/index.html">Shinobi Clocks</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="collapse navbar-collapse" id="navbarColor01">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                        <a class="nav-link" aria-current="page" href="/index.html">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Countdown</a>
+                        <a class="nav-link" href="/countdown.html">Countdown</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Timer</a>
+                        <a class="nav-link" href="/stopwatch.html">Stopwatch</a>
                     </li>
                 </ul>
-                <ul class="navbar-nav">
+                <ul style="visibility: hidden;" class="navbar-nav">
                     <li class="nav-item">
                         <button class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#intentionModal">
                             <i class="fas fa-cog"></i> <!-- Gear Icon -->
@@ -92,222 +110,30 @@
         </div>
     </nav>
 
-    <!-- Intention Display -->
-    <div class="intention-display" id="intention-display">
-        <!-- Intention will be displayed here -->
-    </div>
-
-    <!-- Countdown Timer Display -->
-    <div class="timer-display" id="timer-display">
-        20:00
-    </div>
-
-    <!-- Timer Preset Buttons -->
-    <div class="presets-container my-3">
-        <div class="btn-group" role="group" aria-label="Timer presets">
-            <button type="button" class="btn btn-outline-info btn-lg" data-time="6000">100 min</button>
-            <button type="button" class="btn btn-outline-info btn-lg" data-time="1200">20 min</button>
-            <button type="button" class="btn btn-outline-info btn-lg" data-time="480">8 min</button>
+    <!-- Main Content: Clock Cards -->
+    <div class="cards-container">
+        <!-- Countdown Timer Card -->
+        <div class="card border-primary mb-3" onclick="location.href='countdown.html'">
+            <div class="card-header">Countdown</div>
+            <div class="card-body">
+                <h4 class="card-title">Countdown Timer</h4>
+                <p class="card-text">Set a time and watch it count down to zero, with an optional alarm and count-up feature.</p>
+                <a href="countdown.html" class="btn btn-primary">Go to Countdown</a>
+            </div>
         </div>
-    </div>
 
-    <!-- Main Start/Pause/Reset Controls -->
-    <div class="controls-container">
-        <div class="btn-group btn-group-lg" role="group" aria-label="Timer controls">
-             <button type="button" class="btn btn-success" id="start-btn">Start</button>
-             <button type="button" class="btn btn-warning" id="pause-btn">Pause</button>
-             <button type="button" class="btn btn-danger" id="reset-btn">Reset</button>
-        </div>
-    </div>
-
-    <!-- Audio element for the alarm sound -->
-    <audio id="alarm-sound" src="sounds/microwave.mp3" preload="auto"></audio>
-
-    <!-- Intention Modal -->
-    <div class="modal fade" id="intentionModal" tabindex="-1" aria-labelledby="intentionModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="intentionModalLabel">Set Your Intention</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="intentionInput" class="form-label">What are you working on?</label>
-                        <textarea class="form-control" id="intentionInput" rows="3" placeholder="e.g., 'Change the lettering of my linked profile'"></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="saveIntentionBtn">Save Intention</button>
-                </div>
+        <!-- Stopwatch Card -->
+        <div class="card border-primary mb-3" onclick="location.href='stopwatch.html'">
+            <div class="card-header">Stopwatch</div>
+            <div class="card-body">
+                <h4 class="card-title">Stopwatch</h4>
+                <p class="card-text">Measure time elapsed with start, pause, and reset functionality, accurate to milliseconds.</p>
+                <a href="stopwatch.html" class="btn btn-primary">Go to Stopwatch</a>
             </div>
         </div>
     </div>
 
-    <!-- Bootstrap JS for any components that might need it -->
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Countdown Timer JavaScript Logic -->
-    <script>
-        const timerDisplay = document.getElementById('timer-display');
-        const startBtn = document.getElementById('start-btn');
-        const pauseBtn = document.getElementById('pause-btn');
-        const resetBtn = document.getElementById('reset-btn');
-        const presetButtons = document.querySelectorAll('.presets-container .btn');
-        const alarmSound = document.getElementById('alarm-sound');
-        const intentionDisplay = document.getElementById('intention-display');
-        const intentionInput = document.getElementById('intentionInput');
-        const saveIntentionBtn = document.getElementById('saveIntentionBtn');
-
-        let countdown; // To hold the setInterval instance
-        let timeLeft; // Time left in seconds. Can be negative for count-up.
-        let initialTime = 1200; // Default to 20 minutes (1200 seconds)
-        let isPaused = true; // Timer is paused by default
-        let alarmHasPlayed = false; // Flag to ensure alarm plays only once
-
-        const INTENTION_STORAGE_KEY = 'countdownTimerIntention';
-
-        /**
-         * Requests to enter fullscreen mode. (Currently commented out as it can be disruptive)
-         */
-        // function enterFullScreen() {
-        //     const elem = document.documentElement;
-        //     if (elem.requestFullscreen) {
-        //         elem.requestFullscreen().catch(err => console.error(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`));
-        //     } else if (elem.mozRequestFullScreen) { // Firefox
-        //         elem.mozRequestFullScreen();
-        //     } else if (elem.webkitRequestFullscreen) { // Chrome, Safari & Opera
-        //         elem.webkitRequestFullscreen();
-        //     } else if (elem.msRequestFullscreen) { // IE/Edge
-        //         elem.msRequestFullscreen();
-        //     }
-        // }
-
-        /**
-         * Updates the timer display with the formatted time for both countdown and count-up.
-         * @param {number} seconds - The total seconds to display.
-         */
-        function displayTime(seconds) {
-            const isCountingUp = seconds < 0;
-            const remainingSeconds = Math.abs(seconds);
-            const minutes = Math.floor(remainingSeconds / 60);
-            const remainderSeconds = remainingSeconds % 60;
-
-            const display = `${isCountingUp ? '+ ' : ''}${minutes < 10 ? '0' : ''}${minutes}:${remainderSeconds < 10 ? '0' : ''}${remainderSeconds}`;
-
-            timerDisplay.textContent = display;
-            document.title = display; // Update page title
-        }
-
-        /**
-         * Core timer function that handles both countdown and count-up.
-         */
-        function runTimer() {
-            // If the timer is not paused, don't start a new one.
-            if (!isPaused) return;
-
-            // enterFullScreen(); // Request fullscreen when the timer starts.
-            isPaused = false;
-
-            const endTime = Date.now() + timeLeft * 1000;
-            countdown = setInterval(() => {
-                timeLeft = Math.round((endTime - Date.now()) / 1000);
-
-                // When countdown finishes, play alarm once and transition to count-up.
-                if (timeLeft < 0 && !alarmHasPlayed) {
-                    alarmSound.play();
-                    alarmHasPlayed = true;
-                }
-                displayTime(timeLeft);
-            }, 1000);
-        }
-
-        /**
-         * Pauses the timer.
-         */
-        function pauseTimer() {
-            clearInterval(countdown);
-            isPaused = true;
-        }
-
-        /**
-         * Resets the timer to the last selected initial time.
-         */
-        function resetTimer() {
-            clearInterval(countdown);
-            isPaused = true;
-            alarmHasPlayed = false;
-            timeLeft = initialTime;
-            displayTime(initialTime);
-        }
-
-        /**
-         * Loads the saved intention from local storage and displays it.
-         */
-        function loadIntention() {
-            const savedIntention = localStorage.getItem(INTENTION_STORAGE_KEY);
-            if (savedIntention) {
-                intentionDisplay.textContent = savedIntention;
-                intentionInput.value = savedIntention; // Also set it in the modal input
-            } else {
-                intentionDisplay.textContent = "--"; // Default text if nothing saved
-                intentionInput.value = "";
-            }
-        }
-
-        /**
-         * Saves the current intention to local storage and updates the display.
-         */
-        function saveIntention() {
-            const currentIntention = intentionInput.value.trim();
-            localStorage.setItem(INTENTION_STORAGE_KEY, currentIntention);
-            intentionDisplay.textContent = currentIntention || "--"; // Display placeholder if empty
-            // Hide the modal
-            const modalElement = document.getElementById('intentionModal');
-            const modal = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
-            modal.hide();
-        }
-
-        // --- Event Listeners ---
-        startBtn.addEventListener('click', runTimer);
-        pauseBtn.addEventListener('click', pauseTimer);
-        resetBtn.addEventListener('click', resetTimer);
-
-               // New line to add:
-        intentionDisplay.addEventListener('click', () => {
-            const modalElement = document.getElementById('intentionModal');
-            const modal = new bootstrap.Modal(modalElement);
-            modal.show();
-        });
-
-        presetButtons.forEach(button => {
-            button.addEventListener('click', (e) => {
-                // Set the new initial time
-                initialTime = parseInt(e.target.dataset.time, 10);
-                // Reset the timer state
-                resetTimer();
-                // Immediately start the timer
-                runTimer();
-            });
-        });
-
-        saveIntentionBtn.addEventListener('click', saveIntention);
-
-        // Event listener to load intention into modal when it's about to be shown
-        const intentionModal = document.getElementById('intentionModal');
-        intentionModal.addEventListener('show.bs.modal', function () {
-            intentionInput.value = localStorage.getItem(INTENTION_STORAGE_KEY) || "";
-        });
-
-
-        // Initialize display on load
-        timeLeft = initialTime;
-        displayTime(initialTime);
-        loadIntention(); // Load intention on page load
-
-        // Make controls visible on load (they were display:none, now just ensure they are visible)
-        document.querySelector('.controls-container').style.display = 'block';
-    </script>
 </body>
 </html>
