@@ -1,24 +1,19 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Countdown Timer / Software Shinobi</title>    
-    
-    <!-- Bootswatch 'Darkly' Theme -->
+    <title>Countdown Timer / Software Shinobi</title>
+    <!-- Bootswatch 'Quartz' Theme -->
     <link rel="stylesheet" href="https://bootswatch.com/5/quartz/bootstrap.min.css">
-    
-    <!-- Custom Styles for Fullscreen Layout -->
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Custom Styles for Fullscreen Layout and Intention Display -->
     <style>
         html, body {
             height: 100%;
             margin: 0;
-            overflow: hidden; /* Prevents scrollbars */
+            /* overflow: hidden; /* Prevents scrollbars - re-enable if needed for fullscreen layout */
         }
         body {
             display: flex;
@@ -26,10 +21,25 @@
             justify-content: center;
             align-items: center;
             text-align: center;
+            padding-top: 56px; /* Adjust for fixed-top navbar height */
+        }
+        .intention-display {
+            font-size: 8vw; /* Responsive font size */
+            font-weight: bold;
+            color: #ffc107; /* Warning color from Bootswatch */
+            margin-bottom: 20px;
+            max-width: 90%; /* Limit width to prevent overflow */
+            word-wrap: break-word; /* Break long words */
+            line-height: 1.2;
+        }
+        @media (min-width: 768px) {
+            .intention-display {
+                font-size: 60px; /* Fixed size for desktop */
+            }
         }
         .timer-display {
             /* Responsive font size based on viewport width */
-            font-size: 30vw; 
+            font-size: 30vw;
             font-weight: bold;
             line-height: 1;
         }
@@ -40,28 +50,69 @@
             }
         }
         .controls-container .btn {
+            margin: 10px; /* Increased margin for larger buttons */
+            padding: 15px 30px; /* Bigger padding */
+            font-size: 1.5rem; /* Larger font size for buttons */
+        }
+        .presets-container .btn {
             margin: 5px;
+            padding: 10px 20px; /* Bigger padding for preset buttons */
+            font-size: 1.2rem; /* Larger font size for preset buttons */
         }
     </style>
 </head>
 <body>
+    <!-- Top Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Clocks</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Countdown</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Timer</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <button class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#intentionModal">
+                            <i class="fas fa-cog"></i> <!-- Gear Icon -->
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Intention Display -->
+    <div class="intention-display" id="intention-display">
+        <!-- Intention will be displayed here -->
+    </div>
 
     <!-- Countdown Timer Display -->
     <div class="timer-display" id="timer-display">
         20:00
     </div>
-    
+
     <!-- Timer Preset Buttons -->
     <div class="presets-container my-3">
         <div class="btn-group" role="group" aria-label="Timer presets">
-            <button type="button" class="btn btn-outline-info" data-time="6000">100 min</button>
-            <button type="button" class="btn btn-outline-info" data-time="1200">20 min</button>
-            <button type="button" class="btn btn-outline-info" data-time="480">8 min</button>
+            <button type="button" class="btn btn-outline-info btn-lg" data-time="6000">100 min</button>
+            <button type="button" class="btn btn-outline-info btn-lg" data-time="1200">20 min</button>
+            <button type="button" class="btn btn-outline-info btn-lg" data-time="480">8 min</button>
         </div>
     </div>
 
     <!-- Main Start/Pause/Reset Controls -->
-    <div style="display:none" class="controls-container">
+    <div class="controls-container">
         <div class="btn-group btn-group-lg" role="group" aria-label="Timer controls">
              <button type="button" class="btn btn-success" id="start-btn">Start</button>
              <button type="button" class="btn btn-warning" id="pause-btn">Pause</button>
@@ -71,6 +122,28 @@
 
     <!-- Audio element for the alarm sound -->
     <audio id="alarm-sound" src="sounds/microwave.mp3" preload="auto"></audio>
+
+    <!-- Intention Modal -->
+    <div class="modal fade" id="intentionModal" tabindex="-1" aria-labelledby="intentionModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="intentionModalLabel">Set Your Intention</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="intentionInput" class="form-label">What are you working on?</label>
+                        <textarea class="form-control" id="intentionInput" rows="3" placeholder="e.g., 'Change the lettering of my linked profile'"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveIntentionBtn">Save Intention</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Bootstrap JS for any components that might need it -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -83,6 +156,9 @@
         const resetBtn = document.getElementById('reset-btn');
         const presetButtons = document.querySelectorAll('.presets-container .btn');
         const alarmSound = document.getElementById('alarm-sound');
+        const intentionDisplay = document.getElementById('intention-display');
+        const intentionInput = document.getElementById('intentionInput');
+        const saveIntentionBtn = document.getElementById('saveIntentionBtn');
 
         let countdown; // To hold the setInterval instance
         let timeLeft; // Time left in seconds. Can be negative for count-up.
@@ -90,21 +166,23 @@
         let isPaused = true; // Timer is paused by default
         let alarmHasPlayed = false; // Flag to ensure alarm plays only once
 
+        const INTENTION_STORAGE_KEY = 'countdownTimerIntention';
+
         /**
-         * Requests to enter fullscreen mode.
+         * Requests to enter fullscreen mode. (Currently commented out as it can be disruptive)
          */
-        function enterFullScreen() {
-            const elem = document.documentElement;
-            if (elem.requestFullscreen) {
-                elem.requestFullscreen().catch(err => console.error(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`));
-            } else if (elem.mozRequestFullScreen) { // Firefox
-                elem.mozRequestFullScreen();
-            } else if (elem.webkitRequestFullscreen) { // Chrome, Safari & Opera
-                elem.webkitRequestFullscreen();
-            } else if (elem.msRequestFullscreen) { // IE/Edge
-                elem.msRequestFullscreen();
-            }
-        }
+        // function enterFullScreen() {
+        //     const elem = document.documentElement;
+        //     if (elem.requestFullscreen) {
+        //         elem.requestFullscreen().catch(err => console.error(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`));
+        //     } else if (elem.mozRequestFullScreen) { // Firefox
+        //         elem.mozRequestFullScreen();
+        //     } else if (elem.webkitRequestFullscreen) { // Chrome, Safari & Opera
+        //         elem.webkitRequestFullscreen();
+        //     } else if (elem.msRequestFullscreen) { // IE/Edge
+        //         elem.msRequestFullscreen();
+        //     }
+        // }
 
         /**
          * Updates the timer display with the formatted time for both countdown and count-up.
@@ -113,12 +191,11 @@
         function displayTime(seconds) {
             const isCountingUp = seconds < 0;
             const remainingSeconds = Math.abs(seconds);
-
             const minutes = Math.floor(remainingSeconds / 60);
             const remainderSeconds = remainingSeconds % 60;
-            
+
             const display = `${isCountingUp ? '+ ' : ''}${minutes < 10 ? '0' : ''}${minutes}:${remainderSeconds < 10 ? '0' : ''}${remainderSeconds}`;
-            
+
             timerDisplay.textContent = display;
             document.title = display; // Update page title
         }
@@ -128,23 +205,20 @@
          */
         function runTimer() {
             // If the timer is not paused, don't start a new one.
-            if (!isPaused) return; 
-            
-            //            enterFullScreen(); // Request fullscreen when the timer starts.
+            if (!isPaused) return;
 
+            // enterFullScreen(); // Request fullscreen when the timer starts.
             isPaused = false;
-            
-            const endTime = Date.now() + timeLeft * 1000;
 
+            const endTime = Date.now() + timeLeft * 1000;
             countdown = setInterval(() => {
                 timeLeft = Math.round((endTime - Date.now()) / 1000);
-                
+
                 // When countdown finishes, play alarm once and transition to count-up.
                 if (timeLeft < 0 && !alarmHasPlayed) {
                     alarmSound.play();
                     alarmHasPlayed = true;
                 }
-
                 displayTime(timeLeft);
             }, 1000);
         }
@@ -167,11 +241,45 @@
             timeLeft = initialTime;
             displayTime(initialTime);
         }
-        
+
+        /**
+         * Loads the saved intention from local storage and displays it.
+         */
+        function loadIntention() {
+            const savedIntention = localStorage.getItem(INTENTION_STORAGE_KEY);
+            if (savedIntention) {
+                intentionDisplay.textContent = savedIntention;
+                intentionInput.value = savedIntention; // Also set it in the modal input
+            } else {
+                intentionDisplay.textContent = "--"; // Default text if nothing saved
+                intentionInput.value = "";
+            }
+        }
+
+        /**
+         * Saves the current intention to local storage and updates the display.
+         */
+        function saveIntention() {
+            const currentIntention = intentionInput.value.trim();
+            localStorage.setItem(INTENTION_STORAGE_KEY, currentIntention);
+            intentionDisplay.textContent = currentIntention || "--"; // Display placeholder if empty
+            // Hide the modal
+            const modalElement = document.getElementById('intentionModal');
+            const modal = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
+            modal.hide();
+        }
+
         // --- Event Listeners ---
         startBtn.addEventListener('click', runTimer);
         pauseBtn.addEventListener('click', pauseTimer);
         resetBtn.addEventListener('click', resetTimer);
+
+               // New line to add:
+        intentionDisplay.addEventListener('click', () => {
+            const modalElement = document.getElementById('intentionModal');
+            const modal = new bootstrap.Modal(modalElement);
+            modal.show();
+        });
 
         presetButtons.forEach(button => {
             button.addEventListener('click', (e) => {
@@ -184,10 +292,22 @@
             });
         });
 
+        saveIntentionBtn.addEventListener('click', saveIntention);
+
+        // Event listener to load intention into modal when it's about to be shown
+        const intentionModal = document.getElementById('intentionModal');
+        intentionModal.addEventListener('show.bs.modal', function () {
+            intentionInput.value = localStorage.getItem(INTENTION_STORAGE_KEY) || "";
+        });
+
+
         // Initialize display on load
         timeLeft = initialTime;
         displayTime(initialTime);
-    </script>
+        loadIntention(); // Load intention on page load
 
+        // Make controls visible on load (they were display:none, now just ensure they are visible)
+        document.querySelector('.controls-container').style.display = 'block';
+    </script>
 </body>
 </html>
