@@ -3,88 +3,155 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Countdown / Shinobi Clocks</title>
-    <!-- Bootswatch 'Quartz' Theme -->
-    <link rel="stylesheet" href="https://bootswatch.com/5/quartz/bootstrap.min.css">
+    <title>Countdown & Time Audit / Shinobi Clocks</title>
+    <!-- Bootswatch 'Sketchy' Theme -->
+    <link rel="stylesheet" href="https://bootswatch.com/5/sketchy/bootstrap.min.css">
     <!-- Font Awesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Custom Styles for Fullscreen Layout and Intention Display -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         html, body {
             height: 100%;
             margin: 0;
-            /* overflow: hidden; /* Prevents scrollbars - re-enable if needed for fullscreen layout */
+            padding: 0;
+            background-color: #fcfcfc;
         }
+        
         body {
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: center;
             text-align: center;
-            padding-top: 56px; /* Adjust for fixed-top navbar height */
+            padding-top: 65px; /* Ensures flush alignment under fixed navbar without extra whitespace */
+            min-height: 100vh;
         }
+        
+        .main-container {
+            width: 100%;
+            max-width: 900px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+        }
+
+        .intention-container {
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            width: 100%;
+            max-width: 650px;
+        }
+        
+        .intention-container:hover {
+            transform: scale(1.02);
+        }
+
         .intention-display {
-            font-size: 8vw; /* Responsive font size */
+            font-size: 2rem;
             font-weight: bold;
-            color: #ffc107; /* Warning color from Bootswatch */
-            margin-bottom: 20px;
-            max-width: 90%; /* Limit width to prevent overflow */
-            word-wrap: break-word; /* Break long words */
+            color: #212529;
+            word-wrap: break-word;
             line-height: 1.2;
         }
+
         @media (min-width: 768px) {
             .intention-display {
-                font-size: 60px; /* Fixed size for desktop */
+                font-size: 2.5rem;
             }
         }
+
         .timer-display {
-            /* Responsive font size based on viewport width */
-            font-size: 30vw;
-            font-weight: bold;
+            font-size: 22vw;
+            font-weight: 900;
             line-height: 1;
+            user-select: none;
+            letter-spacing: -2px;
+            margin: 20px 0;
+            font-family: "Comic Sans MS", "Chalkboard SE", "Comic Neue", sans-serif;
+            transition: color 0.3s ease;
         }
-        /* Media query for larger screens to cap font size */
+
         @media (min-width: 768px) {
             .timer-display {
-                font-size: 200px; /* A fixed large size for desktop */
+                font-size: 160px;
             }
         }
-        .controls-container .btn {
-            margin: 10px; /* Increased margin for larger buttons */
-            padding: 15px 30px; /* Bigger padding */
-            font-size: 1.5rem; /* Larger font size for buttons */
+
+        /* Ringing state visual feedback */
+        .alarm-active {
+            animation: pulse-ring 0.8s infinite alternate;
+            color: #d9534f !important;
         }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.06); }
+        }
+
+        .controls-container .btn {
+            margin: 6px;
+            padding: 12px 24px;
+            font-size: 1.25rem;
+            border-width: 2px;
+        }
+
         .presets-container .btn {
-            margin: 5px;
-            padding: 10px 20px; /* Bigger padding for preset buttons */
-            font-size: 1.2rem; /* Larger font size for preset buttons */
+            margin: 4px;
+            padding: 8px 16px;
+            font-size: 1.1rem;
+            border-width: 2px;
+        }
+
+        .dismiss-banner {
+            display: none;
+            width: 100%;
+            max-width: 650px;
+            margin-bottom: 15px;
+        }
+
+        .audit-badge {
+            font-size: 0.9rem;
+            vertical-align: middle;
+        }
+
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1080;
         }
     </style>
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg bg-primary fixed-top" data-bs-theme="dark">
+    <!-- Sticky Navigation Bar - Flush Alignment with Content -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top border-bottom border-3 border-dark m-0">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/index.html">Clocks</a>
+            <a class="navbar-brand fw-bold" href="/index.html"><i class="fas fa-stopwatch me-2"></i>Shinobi Clocks</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarColor01">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="/index.html">Home</a>
+                        <a class="nav-link" href="/index.html">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/countdown.html">Countdown</a>
+                        <a class="nav-link active" href="/countdown.html">Countdown</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/stopwatch.html">Stopwatch</a>
                     </li>
                 </ul>
-                <ul class="navbar-nav">
+                <ul class="navbar-nav align-items-center">
+                    <li class="nav-item me-2">
+                        <span class="badge bg-info text-dark audit-badge" id="auditCountBadge">0 Logs Saved</span>
+                    </li>
                     <li class="nav-item">
-                        <button class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#intentionModal">
-                            <i class="fas fa-cog"></i> <!-- Gear Icon -->
+                        <button class="btn btn-outline-light btn-sm" data-bs-toggle="modal" data-bs-target="#intentionModal" title="Set Intention">
+                            <i class="fas fa-pencil-alt me-1"></i> Intention
                         </button>
                     </li>
                 </ul>
@@ -92,64 +159,130 @@
         </div>
     </nav>
 
-    <!-- Intention Display -->
-    <div class="intention-display" id="intention-display">
-        <!-- Intention will be displayed here -->
-    </div>
+    <div class="main-container">
+        <!-- Dismiss Alarm Banner (Visible when ringing) -->
+        <div class="dismiss-banner" id="dismissBanner">
+            <div class="card border-danger bg-danger text-white p-3 shadow-lg">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <div class="text-start">
+                        <h4 class="mb-0 text-white"><i class="fas fa-bell fa-bounce me-2"></i> Time's Up!</h4>
+                        <small>Click dismiss to log your task to the API & Audit.</small>
+                    </div>
+                    <button class="btn btn-warning btn-lg fw-bold border-2 border-dark" id="dismiss-alarm-btn">
+                        <i class="fas fa-check-circle me-1"></i> DISMISS & AUDIT
+                    </button>
+                </div>
+            </div>
+        </div>
 
-    <!-- Countdown Timer Display -->
-    <div class="timer-display" id="timer-display">
-        20:00
-    </div>
+        <!-- Intention Display Container -->
+        <div class="card border-2 border-dark bg-warning p-3 mb-2 intention-container shadow-sm" id="intentionCard" title="Click to edit intention">
+            <div class="card-body py-1 px-3">
+                <small class="text-uppercase fw-bold text-dark d-block mb-1">Current Focus Task <i class="fas fa-edit ms-1"></i></small>
+                <div class="intention-display" id="intention-display">--</div>
+            </div>
+        </div>
 
-    <!-- Timer Preset Buttons -->
-    <div class="presets-container my-3">
-        <div class="btn-group" role="group" aria-label="Timer presets">
-            <button type="button" class="btn btn-outline-info btn-lg" data-time="6000">100 min</button>
-            <button type="button" class="btn btn-outline-info btn-lg" data-time="1200">20 min</button>
-            <button type="button" class="btn btn-outline-info btn-lg" data-time="480">8 min</button>
+        <!-- Countdown Timer Display -->
+        <div class="timer-display text-dark" id="timer-display">
+            20:00
+        </div>
+
+        <!-- Timer Preset Buttons (5s test, 8m, 20m, 100m) -->
+        <div class="presets-container my-2">
+            <div class="btn-group flex-wrap" role="group" aria-label="Timer presets">
+                <button type="button" class="btn btn-outline-danger fw-bold" data-time="5"><i class="fas fa-vial me-1"></i> 5 sec</button>
+                <button type="button" class="btn btn-outline-dark" data-time="480">8 min</button>
+                <button type="button" class="btn btn-outline-dark" data-time="1200">20 min</button>
+                <button type="button" class="btn btn-outline-dark" data-time="6000">100 min</button>
+            </div>
+        </div>
+
+        <!-- Main Start/Pause/Reset Controls -->
+        <div class="controls-container my-2">
+            <div class="btn-group" role="group" aria-label="Timer controls">
+                 <button type="button" class="btn btn-success" id="start-btn"><i class="fas fa-play me-1"></i> Start</button>
+                 <button type="button" class="btn btn-warning" id="pause-btn"><i class="fas fa-pause me-1"></i> Pause</button>
+                 <button type="button" class="btn btn-danger" id="reset-btn"><i class="fas fa-undo me-1"></i> Reset</button>
+            </div>
         </div>
     </div>
 
-    <!-- Main Start/Pause/Reset Controls -->
-    <div class="controls-container">
-        <div class="btn-group btn-group-lg" role="group" aria-label="Timer controls">
-             <button type="button" class="btn btn-success" id="start-btn">Start</button>
-             <button type="button" class="btn btn-warning" id="pause-btn">Pause</button>
-             <button type="button" class="btn btn-danger" id="reset-btn">Reset</button>
-        </div>
-    </div>
-
-    <!-- Audio element for the alarm sound -->
+    <!-- Audio element for alarm sound -->
     <audio id="alarm-sound" src="sounds/microwave.mp3" preload="auto"></audio>
 
     <!-- Intention Modal -->
     <div class="modal fade" id="intentionModal" tabindex="-1" aria-labelledby="intentionModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="intentionModalLabel">Set Your Intention</h5>
+            <div class="modal-content border-3 border-dark">
+                <div class="modal-header bg-warning">
+                    <h5 class="modal-title fw-bold text-dark" id="intentionModalLabel"><i class="fas fa-bullseye me-2"></i>Set Target Intention</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="intentionInput" class="form-label">What are you working on?</label>
-                        <textarea class="form-control" id="intentionInput" rows="3" placeholder="e.g., 'Change the lettering of my linked profile'"></textarea>
+                    <div class="mb-3 text-start">
+                        <label for="intentionInput" class="form-label fw-bold">What task do you plan to complete?</label>
+                        <textarea class="form-control border-2 border-dark" id="intentionInput" rows="3" placeholder="e.g., 'Draft API documentation'"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="saveIntentionBtn">Save Intention</button>
+                    <button type="button" class="btn btn-primary fw-bold" id="saveIntentionBtn">Save Intention</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Bootstrap JS for any components that might need it -->
+    <!-- Time Audit Prompt Modal (Triggered on Alarm Dismiss) -->
+    <div class="modal fade" id="auditModal" tabindex="-1" aria-labelledby="auditModalLabel" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-4 border-dark shadow">
+                <div class="modal-header bg-primary text-white">
+                    <h4 class="modal-title fw-bold text-white" id="auditModalLabel"><i class="fas fa-clipboard-check me-2"></i>Time Audit Logging</h4>
+                </div>
+                <div class="modal-body text-start">
+                    <p class="lead fw-bold mb-3">Timer completed! Please record what actually got done to log to the backend API.</p>
+                    
+                    <form id="auditForm">
+                        <div class="mb-3">
+                            <label for="auditIntention" class="form-label fw-bold">Stated Intention (Name):</label>
+                            <input type="text" class="form-control border-2 border-dark bg-light" id="auditIntention" readonly>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="auditActual" class="form-label fw-bold">What did you actually do? (Description) <span class="text-danger">*</span></label>
+                            <textarea class="form-control border-2 border-dark" id="auditActual" rows="3" required placeholder="Describe what you accomplished..."></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer bg-light d-flex justify-content-end">
+                    <button type="button" class="btn btn-success fw-bold border-2 border-dark" id="saveAuditBtn">
+                        <i class="fas fa-cloud-upload-alt me-1"></i> Submit & Save Task
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container for API Status Feedback -->
+    <div class="toast-container">
+        <div id="apiToast" class="toast align-items-center text-white bg-dark border-3 border-dark" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body" id="toastMessage">
+                    API Syncing...
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Countdown Timer JavaScript Logic -->
     <script>
+        // Endpoint URL defined earlier
+        const API_URL = "https://apis.activity.embanet.online/todo";
+
+        // DOM Elements
         const timerDisplay = document.getElementById('timer-display');
         const startBtn = document.getElementById('start-btn');
         const pauseBtn = document.getElementById('pause-btn');
@@ -159,35 +292,99 @@
         const intentionDisplay = document.getElementById('intention-display');
         const intentionInput = document.getElementById('intentionInput');
         const saveIntentionBtn = document.getElementById('saveIntentionBtn');
+        const intentionCard = document.getElementById('intentionCard');
 
-        let countdown; // To hold the setInterval instance
-        let timeLeft; // Time left in seconds. Can be negative for count-up.
-        let initialTime = 1200; // Default to 20 minutes (1200 seconds)
-        let isPaused = true; // Timer is paused by default
-        let alarmHasPlayed = false; // Flag to ensure alarm plays only once
+        const dismissBanner = document.getElementById('dismissBanner');
+        const dismissAlarmBtn = document.getElementById('dismiss-alarm-btn');
+
+        // Audit Modal Elements
+        const auditModalEl = document.getElementById('auditModal');
+        const auditModal = new bootstrap.Modal(auditModalEl);
+        const auditIntentionInput = document.getElementById('auditIntention');
+        const auditActualInput = document.getElementById('auditActual');
+        const saveAuditBtn = document.getElementById('saveAuditBtn');
+        const auditCountBadge = document.getElementById('auditCountBadge');
+        
+        // Toast Notification Element
+        const apiToastEl = document.getElementById('apiToast');
+        const toastMessageEl = document.getElementById('toastMessage');
+        const apiToast = new bootstrap.Toast(apiToastEl, { delay: 4000 });
+
+        // State Variables
+        let countdown;
+        let timeLeft;
+        let initialTime = 1200; // 20 minutes default
+        let isPaused = true;
+        let alarmHasPlayed = false;
+        let audioContext = null;
+        let synthInterval = null;
 
         const INTENTION_STORAGE_KEY = 'countdownTimerIntention';
+        const AUDIT_LOGS_STORAGE_KEY = 'shinobiTimeAuditLogs';
 
         /**
-         * Requests to enter fullscreen mode. (Currently commented out as it can be disruptive)
+         * Web Audio API synthesized alarm sound fallback if MP3 playback fails or is blocked.
          */
-        // function enterFullScreen() {
-        //     const elem = document.documentElement;
-        //     if (elem.requestFullscreen) {
-        //         elem.requestFullscreen().catch(err => console.error(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`));
-        //     } else if (elem.mozRequestFullScreen) { // Firefox
-        //         elem.mozRequestFullScreen();
-        //     } else if (elem.webkitRequestFullscreen) { // Chrome, Safari & Opera
-        //         elem.webkitRequestFullscreen();
-        //     } else if (elem.msRequestFullscreen) { // IE/Edge
-        //         elem.msRequestFullscreen();
-        //     }
-        // }
+        function playFallbackSynthAlarm() {
+            try {
+                console.log("[AUDIO] Playing Web Audio synthesized alarm tone.");
+                if (!audioContext) {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (audioContext.state === 'suspended') {
+                    audioContext.resume();
+                }
 
-        /**
-         * Updates the timer display with the formatted time for both countdown and count-up.
-         * @param {number} seconds - The total seconds to display.
-         */
+                synthInterval = setInterval(() => {
+                    if (audioContext && !alarmHasPlayed) {
+                        const osc = audioContext.createOscillator();
+                        const gain = audioContext.createGain();
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(880, audioContext.currentTime); // A5 note
+                        gain.gain.setValueAtTime(0.3, audioContext.currentTime);
+                        osc.connect(gain);
+                        gain.connect(audioContext.destination);
+                        osc.start();
+                        osc.stop(audioContext.currentTime + 0.35);
+                    }
+                }, 750);
+            } catch (e) {
+                console.warn('[AUDIO] Web Audio Context error:', e);
+            }
+        }
+
+        function playAlarm() {
+            console.log("[ALARM] Triggering alarm sound and flashing indicator.");
+            alarmSound.play().then(() => {
+                console.log("[AUDIO] MP3 alarm sound playing successfully.");
+            }).catch(err => {
+                console.log('[AUDIO] MP3 playback failed/blocked, starting Web Audio synth fallback:', err);
+                playFallbackSynthAlarm();
+            });
+            alarmDisplayRinging(true);
+        }
+
+        function stopAlarm() {
+            console.log("[ALARM] Stopping alarm audio and clearing visual indicators.");
+            alarmSound.pause();
+            alarmSound.currentTime = 0;
+            if (synthInterval) {
+                clearInterval(synthInterval);
+                synthInterval = null;
+            }
+            alarmDisplayRinging(false);
+        }
+
+        function alarmDisplayRinging(isRinging) {
+            if (isRinging) {
+                timerDisplay.classList.add('alarm-active');
+                dismissBanner.style.display = 'block';
+            } else {
+                timerDisplay.classList.remove('alarm-active');
+                dismissBanner.style.display = 'none';
+            }
+        }
+
         function displayTime(seconds) {
             const isCountingUp = seconds < 0;
             const remainingSeconds = Math.abs(seconds);
@@ -197,85 +394,187 @@
             const display = `${isCountingUp ? '+ ' : ''}${minutes < 10 ? '0' : ''}${minutes}:${remainderSeconds < 10 ? '0' : ''}${remainderSeconds}`;
 
             timerDisplay.textContent = display;
-            document.title = display; // Update page title
+            document.title = `${display} - Shinobi Clocks`;
         }
 
-        /**
-         * Core timer function that handles both countdown and count-up.
-         */
         function runTimer() {
-            // If the timer is not paused, don't start a new one.
             if (!isPaused) return;
-
-            // enterFullScreen(); // Request fullscreen when the timer starts.
             isPaused = false;
+            console.log(`[TIMER] Started. Time remaining: ${timeLeft} seconds.`);
 
             const endTime = Date.now() + timeLeft * 1000;
             countdown = setInterval(() => {
                 timeLeft = Math.round((endTime - Date.now()) / 1000);
 
-                // When countdown finishes, play alarm once and transition to count-up.
-                if (timeLeft < 0 && !alarmHasPlayed) {
-                    alarmSound.play();
+                // When countdown hits 0, trigger alarm once and enter count-up state
+                if (timeLeft <= 0 && !alarmHasPlayed) {
                     alarmHasPlayed = true;
+                    playAlarm();
                 }
                 displayTime(timeLeft);
             }, 1000);
         }
 
-        /**
-         * Pauses the timer.
-         */
         function pauseTimer() {
+            console.log(`[TIMER] Paused at ${timeLeft} seconds remaining.`);
             clearInterval(countdown);
             isPaused = true;
         }
 
-        /**
-         * Resets the timer to the last selected initial time.
-         */
         function resetTimer() {
+            console.log(`[TIMER] Reset to ${initialTime} seconds.`);
             clearInterval(countdown);
+            stopAlarm();
             isPaused = true;
             alarmHasPlayed = false;
             timeLeft = initialTime;
             displayTime(initialTime);
         }
 
-        /**
-         * Loads the saved intention from local storage and displays it.
-         */
         function loadIntention() {
             const savedIntention = localStorage.getItem(INTENTION_STORAGE_KEY);
             if (savedIntention) {
                 intentionDisplay.textContent = savedIntention;
-                intentionInput.value = savedIntention; // Also set it in the modal input
+                intentionInput.value = savedIntention;
             } else {
-                intentionDisplay.textContent = "--"; // Default text if nothing saved
+                intentionDisplay.textContent = "Click here to set your target focus task";
                 intentionInput.value = "";
             }
         }
 
-        /**
-         * Saves the current intention to local storage and updates the display.
-         */
         function saveIntention() {
             const currentIntention = intentionInput.value.trim();
             localStorage.setItem(INTENTION_STORAGE_KEY, currentIntention);
-            intentionDisplay.textContent = currentIntention || "--"; // Display placeholder if empty
-            // Hide the modal
+            intentionDisplay.textContent = currentIntention || "Click here to set your target focus task";
+            console.log("[INTENTION] Updated intention:", currentIntention);
+            
             const modalElement = document.getElementById('intentionModal');
             const modal = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
             modal.hide();
         }
 
-        // --- Event Listeners ---
+        function handleDismissAndAudit() {
+            console.log("[ALARM] Alarm dismissed by user. Preparing audit modal.");
+            stopAlarm();
+            pauseTimer();
+
+            const currentIntention = localStorage.getItem(INTENTION_STORAGE_KEY) || "Unspecified Task";
+            auditIntentionInput.value = currentIntention;
+            auditActualInput.value = ""; // Form loads with a blank description field
+
+            auditModal.show();
+        }
+
+        /**
+         * Sends task log payload to the Java Spring REST controller PUT endpoint
+         * and logs request / response objects to the JavaScript console.
+         */
+        async function sendTaskToApi(taskPayload) {
+            console.log("==========================================");
+            console.log("[API REQUEST] Initiating PUT request to endpoint:", API_URL);
+            console.log("[API REQUEST] Payload:", JSON.stringify(taskPayload, null, 2));
+            console.log("==========================================");
+
+            showToast("Syncing task with API...", "bg-info");
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(taskPayload)
+                });
+
+                console.log(`[API RESPONSE] HTTP Status: ${response.status} ${response.statusText}`);
+
+                if (!response.ok) {
+                    throw new Error(`Server returned HTTP ${response.status}`);
+                }
+
+                const responseData = await response.json();
+                console.log("==========================================");
+                console.log("[API RESPONSE SUCCESS] Task created/updated successfully:");
+                console.log(JSON.stringify(responseData, null, 2));
+                console.log("==========================================");
+
+                showToast("Task successfully logged to API!", "bg-success");
+                return responseData;
+            } catch (error) {
+                console.error("==========================================");
+                console.error("[API ERROR] Failed to send task to API:", error);
+                console.error("==========================================");
+
+                showToast("API sync failed. Logged locally.", "bg-danger");
+                return null;
+            }
+        }
+
+        function showToast(msg, bgClass) {
+            toastMessageEl.textContent = msg;
+            apiToastEl.className = `toast align-items-center text-white border-3 border-dark ${bgClass}`;
+            apiToast.show();
+        }
+
+        /**
+         * Save time audit log locally and dispatch request to API
+         */
+        async function saveAuditLog() {
+            const actualText = auditActualInput.value.trim();
+            if (!actualText) {
+                alert("Please specify what you actually did.");
+                return;
+            }
+
+            const name = auditIntentionInput.value.trim() || "Completed Focus Task";
+            const description = actualText;
+            const intention = auditIntentionInput.value.trim();
+            const calendar = "";
+            const client = "";
+
+            // Payload matches Java Task Entity structure
+            const taskPayload = {
+                name: name,
+                description: description,
+                intention: intention,
+                calendar: calendar,
+                client: client
+            };
+
+            // Save locally
+            const auditEntry = {
+                id: Date.now(),
+                timestamp: new Date().toISOString(),
+                durationMinutes: Math.round(initialTime / 60),
+                ...taskPayload
+            };
+
+            const existingLogs = JSON.parse(localStorage.getItem(AUDIT_LOGS_STORAGE_KEY) || '[]');
+            existingLogs.unshift(auditEntry);
+            localStorage.setItem(AUDIT_LOGS_STORAGE_KEY, JSON.stringify(existingLogs));
+
+            updateAuditBadgeCount();
+            auditModal.hide();
+            resetTimer();
+
+            // Fire off API request
+            await sendTaskToApi(taskPayload);
+        }
+
+        function updateAuditBadgeCount() {
+            const existingLogs = JSON.parse(localStorage.getItem(AUDIT_LOGS_STORAGE_KEY) || '[]');
+            auditCountBadge.textContent = `${existingLogs.length} Audit Log${existingLogs.length === 1 ? '' : 's'}`;
+        }
+
+        // Event Listeners
         startBtn.addEventListener('click', runTimer);
         pauseBtn.addEventListener('click', pauseTimer);
         resetBtn.addEventListener('click', resetTimer);
 
-               // New line to add:
-        intentionDisplay.addEventListener('click', () => {
+        dismissAlarmBtn.addEventListener('click', handleDismissAndAudit);
+
+        intentionCard.addEventListener('click', () => {
             const modalElement = document.getElementById('intentionModal');
             const modal = new bootstrap.Modal(modalElement);
             modal.show();
@@ -283,31 +582,29 @@
 
         presetButtons.forEach(button => {
             button.addEventListener('click', (e) => {
-                // Set the new initial time
-                initialTime = parseInt(e.target.dataset.time, 10);
-                // Reset the timer state
+                const targetBtn = e.target.closest('button');
+                if (!targetBtn) return;
+                initialTime = parseInt(targetBtn.dataset.time, 10);
+                console.log(`[PRESET] Selected preset: ${initialTime} seconds.`);
                 resetTimer();
-                // Immediately start the timer
                 runTimer();
             });
         });
 
         saveIntentionBtn.addEventListener('click', saveIntention);
+        saveAuditBtn.addEventListener('click', saveAuditLog);
 
-        // Event listener to load intention into modal when it's about to be shown
         const intentionModal = document.getElementById('intentionModal');
         intentionModal.addEventListener('show.bs.modal', function () {
             intentionInput.value = localStorage.getItem(INTENTION_STORAGE_KEY) || "";
         });
 
-
-        // Initialize display on load
+        // Initialize on load
         timeLeft = initialTime;
         displayTime(initialTime);
-        loadIntention(); // Load intention on page load
-
-        // Make controls visible on load (they were display:none, now just ensure they are visible)
-        document.querySelector('.controls-container').style.display = 'block';
+        loadIntention();
+        updateAuditBadgeCount();
+        console.log("[INIT] Shinobi Countdown Clock loaded and ready.");
     </script>
 </body>
 </html>

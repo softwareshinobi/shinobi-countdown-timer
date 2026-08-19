@@ -2,9 +2,9 @@ services:
 
     clocks.softwareshinobi.online:
 
-        container_name: clocks.softwareshinobi.com
+        container_name: clocks.softwareshinobi.online
 
-        image: softwareshinobi/clocks.softwareshinobi.online:production
+        image: softwareshinobi/clocks.softwareshinobi.online:oaxaca
 
         build:
 
