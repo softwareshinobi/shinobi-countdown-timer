@@ -1,10 +1,10 @@
 services:
 
-    clocks.softwareshinobi.com:
+    clocks.softwareshinobi.online:
 
         container_name: clocks.softwareshinobi.com
 
-        image: softwareshinobi/clocks.softwareshinobi.com
+        image: softwareshinobi/clocks.softwareshinobi.online:production
 
         build:
 
@@ -17,3 +17,4 @@ services:
         ports:
 
             - "8000:80"
+            
